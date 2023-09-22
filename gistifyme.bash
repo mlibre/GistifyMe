@@ -53,7 +53,6 @@ gist_description="Backup created on $timestamp by gistifyMe"
 gist_filename="backup_$timestamp.tar.xz"
 
 tarxzfile=$(base64 -w 0 < "$backup_file")
-echo $tarxzfile
 
 # Create a new Gist with the backup
 gist_response=$(curl -X POST -H "Authorization: token $github_token" \
