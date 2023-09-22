@@ -47,6 +47,20 @@ Before using this script, make sure you have the following installed:
 - You can adjust the compression level in the script (currently set to the maximum, `-9`) if needed
 - Ensure your GitHub Token has the necessary permissions to create Gists
 
+## Reading a Gist Backup
+
+If you have previously created a backup using the GistifyMe Backup Script and want to retrieve and extract it, you can use the `readgistify.bash` script. Here's how to use it:
+
+1. Make sure you have the `readgistify.bash` script in the same directory as your Gistif`yMe script, or you can download it from the [GitHub repository](https://github.com/mlibre/GistifyMe).
+
+2. Run the script with the following command:
+
+   ```bash
+   ./readgistify.bash <Gist URL> [output directory]
+   # Example:
+   ./readgistify.bash "https://gist.github.com/mlibre/6bf478862e6c51164c74b52a4c058bf3"
+   ```
+
 ## License
 
 This script is released under the public dogistifyme using the [Unlicense](https://unlicense.org/)
