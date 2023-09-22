@@ -2,14 +2,18 @@
 
 # Function to display usage instructions
 usage() {
-    echo "Usage: $0 [file1 file2 ...] [folder1 folder2 ...]"
+    echo "Usage: $0 <GitHub Token> [file1 file2 ...] [folder1 folder2 ...]"
     exit 1
 }
 
-# Check if there are any arguments
-if [ $# -eq 0 ]; then
+# Check if there are at least two arguments (GitHub Token and backup sources)
+if [ $# -lt 2 ]; then
     usage
 fi
+
+# GitHub Personal Access Token
+github_token="$1"
+shift  # Remove the GitHub Token from the argument list
 
 # Destination folder for backups
 backup_dir="./gistifyMe-backups"
@@ -23,7 +27,7 @@ backup_file="$backup_dir/backup_$timestamp.tar.xz"
 # Create an array to store backup sources
 backup_sources=()
 
-# Loop through the arguments and add them to the backup sources array
+# Loop through the remaining arguments and add them to the backup sources array
 for arg in "$@"; do
     if [ -e "$arg" ]; then
         backup_sources+=("$arg")
@@ -49,7 +53,7 @@ gist_description="Backup created on $timestamp by gistifyMe"
 gist_filename="backup_$timestamp.tar.xz"
 
 # Create a new Gist with the backup
-gist_response=$(curl -X POST -H "Authorization: token YOUR_GITHUB_TOKEN" \
+gist_response=$(curl -X POST -H "Authorization: token $github_token" \
     -d '{"public":true,"files":{"'$gist_filename'":{"content":"'$(base64 -w 0 < "$backup_file")'"}}}' \
     "https://api.github.com/gists")
 
