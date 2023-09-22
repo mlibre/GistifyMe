@@ -52,9 +52,12 @@ tar -cv "${backup_sources[@]}" | xz -9 -c - > "$backup_file"
 gist_description="Backup created on $timestamp by gistifyMe"
 gist_filename="backup_$timestamp.tar.xz"
 
+tarxzfile=$(base64 -w 0 < "$backup_file")
+echo $tarxzfile
+
 # Create a new Gist with the backup
 gist_response=$(curl -X POST -H "Authorization: token $github_token" \
-    -d '{"public":true,"files":{"'$gist_filename'":{"content":"'$(base64 -w 0 < "$backup_file")'"}}}' \
+    -d '{"public":true,"files":{"'$gist_filename'":{"content":"'$tarxzfile'"}}}' \
     "https://api.github.com/gists")
 
 # Extract the Gist URL from the response

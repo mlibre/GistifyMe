@@ -20,13 +20,13 @@ Before using this script, make sure you have the following installed:
 2. Make the script executable by running the following command:
 
    ```bash
-   chmod +x main.sh
+   chmod +x gistifyme.bash
    ```
 
 3. Run the script with the following command:
 
    ```bash
-   ./main.sh <GitHub Token> [file1 file2 ...] [folder1 folder2 ...]
+   ./gistifyme.bash <GitHub Token> [file1 file2 ...] [folder1 folder2 ...]
    ```
 
    Replace `<GitHub Token>` with your GitHub Personal Access Token, which is required to create Gists. You can generate a token in your [GitHub account settings](https://github.com/settings/tokens).
@@ -36,7 +36,7 @@ Before using this script, make sure you have the following installed:
    Example:
 
    ```bash
-   ./main.sh YOUR_GITHUB_TOKEN file1.txt folder1 file2.txt
+   ./gistifyme.bash YOUR_GITHUB_TOKEN file1.txt folder1 file2.txt
    ```
 
 4. Once the script finishes, it will display the `URL` of the created Gist, where you can access and share your backup.
@@ -49,6 +49,6 @@ Before using this script, make sure you have the following installed:
 
 ## License
 
-This script is released under the public domain using the [Unlicense](https://unlicense.org/)
+This script is released under the public dogistifyme using the [Unlicense](https://unlicense.org/)
 
 Feel free to fork this repository, make improvements, and use it for your backup needs
