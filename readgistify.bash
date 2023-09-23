@@ -2,7 +2,7 @@
 
 # Function to display usage instructions
 usage() {
-    echo "Usage: $0 -l <Gist URL>  [-d output_dir]"
+    echo "Usage: $0 -r <Gist URL>  [-d output_dir]"
     exit 1
 }
 
@@ -11,9 +11,9 @@ gist_url=""
 output_dir="."
 
 # Parse command line options
-while getopts ":l:d:" opt; do
+while getopts ":r:d:" opt; do
     case $opt in
-    l)
+    r)
         gist_url="$OPTARG"
         ;;
     d)
