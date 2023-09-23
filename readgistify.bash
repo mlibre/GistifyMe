@@ -2,20 +2,39 @@
 
 # Function to display usage instructions
 usage() {
-    echo "Usage: $0 <Gist URL> [output directory]"
+    echo "Usage: $0 -l <Gist URL> -d [output directory]"
     exit 1
 }
 
-# Check if there is at least one argument (Gist URL)
-if [ $# -lt 1 ]; then
+# Initialize variables
+gist_url=""
+output_dir="."
+
+# Parse command line options
+while getopts ":l:d:" opt; do
+    case $opt in
+    l)
+        gist_url="$OPTARG"
+        ;;
+    d)
+        output_dir="$OPTARG"
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        ;;
+    :)
+        echo "Option -$OPTARG requires an argument." >&2
+        usage
+        ;;
+    esac
+done
+
+# Check if a Gist URL was provided
+if [ -z "$gist_url" ]; then
+    echo "Gist URL is required."
     usage
 fi
-
-# Gist URL
-gist_url="$1"
-
-# Output directory (default to current directory if not provided)
-output_dir="${2:-.}"
 
 # Ensure the output directory exists
 mkdir -p "$output_dir"
@@ -34,7 +53,7 @@ http_status_code=$(curl -s -o /dev/null -w "%{http_code}" "$raw_gist_url")
 if [ "$http_status_code" -eq 200 ]; then
     # If the status code is 200, proceed to fetch and save the content
     echo "HTTP status code: $http_status_code"
-    curl -L "$raw_gist_url" | base64 -d > "$output_dir/backup.tar.xz"
+    curl -L "$raw_gist_url" | base64 -d >"$output_dir/backup.tar.xz"
     echo "Gist content has been successfully fetched to $output_dir/backup.tar.xz"
 else
     # If the status code is not 200, display an error message
