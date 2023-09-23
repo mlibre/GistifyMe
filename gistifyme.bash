@@ -11,6 +11,10 @@ github_token=""
 backup_dir="."
 files_to_backup=()
 
+timestamp=$(date +'%Y-%m-%dT%H-%M-%S')
+gist_description="Backup created on $timestamp by gistifyMe"
+gist_filename="backup_$timestamp.tar.xz"
+
 # Process command-line arguments
 while getopts ":g:f:d:" opt; do
     case $opt in
@@ -34,6 +38,8 @@ while getopts ":g:f:d:" opt; do
     esac
 done
 
+backup_file="$backup_dir/backup_$timestamp.tar.xz"
+
 # Check if GITHUB_TOKEN environment variable is set
 if [ -z "$github_token" ]; then
     if [ -n "$GITHUB_TOKEN" ]; then
@@ -50,12 +56,6 @@ if [ ${#files_to_backup[@]} -eq 0 ]; then
     usage
 fi
 
-# Timestamp for the backup filename
-timestamp=$(date +'%Y-%m-%dT%H-%M-%S')
-
-# Archive filename
-backup_file="$backup_dir/backup_$timestamp.tar.xz"
-
 # Create the backup directory if it doesn't exist
 mkdir -p "$backup_dir"
 
@@ -63,11 +63,9 @@ mkdir -p "$backup_dir"
 tar -cv "${files_to_backup[@]}" | xz -9 -c - > "$backup_file"
 
 # Upload the backup to a GitHub Gist using curl
-gist_description="Backup created on $timestamp by gistifyMe"
-gist_filename="backup_$timestamp.tar.xz"
 
 tarxzfile=$(base64 -w 0 < "$backup_file")
-
+exit 0
 # Create a new Gist with the backup
 gist_response=$(curl -X POST -H "Authorization: token $github_token" \
     -d '{"public":true,"files":{"'$gist_filename'":{"content":"'$tarxzfile'"}}}' \
