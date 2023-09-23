@@ -2,21 +2,53 @@
 
 # Function to display usage instructions
 usage() {
-    echo "Usage: $0 <GitHub Token> [file1 file2 ...] [folder1 folder2 ...]"
+    echo "Usage: $0 -g <GitHub Token> [-f file1] [-f folder1 ...] [-d <backup_dir>]"
     exit 1
 }
 
-# Check if there are at least two arguments (GitHub Token and backup sources)
-if [ $# -lt 2 ]; then
-    usage
+# Initialize variables with default values
+github_token=""
+backup_dir="."
+files_to_backup=()
+
+# Process command-line arguments
+while getopts ":g:f:d:" opt; do
+    case $opt in
+        g)
+            github_token="$OPTARG"
+            ;;
+        f)
+            files_to_backup+=("$OPTARG")
+            ;;
+        d)
+            backup_dir="$OPTARG"
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            usage
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            usage
+            ;;
+    esac
+done
+
+# Check if GITHUB_TOKEN environment variable is set
+if [ -z "$github_token" ]; then
+    if [ -n "$GITHUB_TOKEN" ]; then
+        github_token="$GITHUB_TOKEN"
+    else
+        echo "GitHub Token not provided. Set it as an environment variable or use the -g option."
+        usage
+    fi
 fi
 
-# GitHub Personal Access Token
-github_token="$1"
-shift  # Remove the GitHub Token from the argument list
-
-# Destination folder for backups
-backup_dir="./gistifyMe-backups"
+# Check if there are valid backup sources
+if [ ${#files_to_backup[@]} -eq 0 ]; then
+    echo "No valid backup sources provided."
+    usage
+fi
 
 # Timestamp for the backup filename
 timestamp=$(date +'%Y-%m-%dT%H-%M-%S')
@@ -24,29 +56,11 @@ timestamp=$(date +'%Y-%m-%dT%H-%M-%S')
 # Archive filename
 backup_file="$backup_dir/backup_$timestamp.tar.xz"
 
-# Create an array to store backup sources
-backup_sources=()
-
-# Loop through the remaining arguments and add them to the backup sources array
-for arg in "$@"; do
-    if [ -e "$arg" ]; then
-        backup_sources+=("$arg")
-    else
-        echo "Warning: '$arg' does not exist and will be skipped."
-    fi
-done
-
-# Check if there are valid backup sources
-if [ ${#backup_sources[@]} -eq 0 ]; then
-    echo "No valid backup sources provided."
-    usage
-fi
-
 # Create the backup directory if it doesn't exist
 mkdir -p "$backup_dir"
 
 # Create a tar archive and compress it with xz
-tar -cv "${backup_sources[@]}" | xz -9 -c - > "$backup_file"
+tar -cv "${files_to_backup[@]}" | xz -9 -c - > "$backup_file"
 
 # Upload the backup to a GitHub Gist using curl
 gist_description="Backup created on $timestamp by gistifyMe"
