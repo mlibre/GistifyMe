@@ -2,7 +2,7 @@
 
 # Function to display usage instructions
 usage() {
-    echo "Usage: $0 -l <Gist URL> -d [output directory]"
+    echo "Usage: $0 -l <Gist URL>  [-d output_dir]"
     exit 1
 }
 

@@ -2,7 +2,7 @@
 
 # Function to display usage instructions
 usage() {
-    echo "Usage: $0 -g <GitHub Token> [-f file1] [-f folder1 ...] [-d <backup_dir>]"
+    echo "Usage: $0 -g <GitHub Token> [-f file1] [-f folder1 ...] [-d <output_dir>]"
     exit 1
 }
 
@@ -12,7 +12,7 @@ fi
 
 # Initialize variables with default values
 github_token=""
-backup_dir="."
+output_dir="."
 files_to_backup=()
 
 timestamp=$(date +'%Y-%m-%dT%H-%M-%S')
@@ -28,7 +28,7 @@ while getopts ":g:f:d:" opt; do
         files_to_backup+=("$OPTARG")
         ;;
     d)
-        backup_dir="$OPTARG"
+        output_dir="$OPTARG"
         ;;
     \?)
         echo "Invalid option: -$OPTARG" >&2
@@ -41,7 +41,7 @@ while getopts ":g:f:d:" opt; do
     esac
 done
 
-backup_file="$backup_dir/backup_$timestamp.tar.xz"
+backup_file="$output_dir/backup_$timestamp.tar.xz"
 
 # Check if GITHUB_TOKEN environment variable is set
 if [ -z "$github_token" ]; then
@@ -60,7 +60,7 @@ if [ ${#files_to_backup[@]} -eq 0 ]; then
 fi
 
 # Create the backup directory if it doesn't exist
-mkdir -p "$backup_dir"
+mkdir -p "$output_dir"
 
 # Create a tar archive and compress it with xz
 tar -cv "${files_to_backup[@]}" | xz -9 -c - >"$backup_file"
