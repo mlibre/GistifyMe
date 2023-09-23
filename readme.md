@@ -1,12 +1,12 @@
-# GistifyMe Backup and Restore Script
+# GistifyMe
 
-**GistifyMe** is a versatile `Bash` script that enables you to back up and restore files and folders, compress them using `xz`, and upload the backup to a `GitHub Gist`. Whether you want to create backups or retrieve and extract previous ones, GistifyMe has you covered.
+**GistifyMe** is a versatile `Bash` script that enables you to back up and restore files and folders, **compress** them using `xz`, and upload the backup to a `GitHub Gist`. Whether you want to create backups or retrieve and extract previous ones, `GistifyMe` has you covered.
 
 ## Prerequisites
 
 Before using this script, make sure you have the following installed:
 
-- [GitHub Token](https://github.com/settings/tokens/): You'll need it for uploading backups to Gists.
+- [GitHub Token](https://github.com/settings/tokens/): You'll need it for uploading backups to Gists
 - [xz-utils](https://tukaani.org/xz/): This script utilizes `xz` for compression, so ensure it's available on your system.
 
 ## Backup Usage
