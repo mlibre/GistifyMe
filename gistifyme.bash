@@ -65,7 +65,7 @@ tar -cv "${files_to_backup[@]}" | xz -9 -c - > "$backup_file"
 # Upload the backup to a GitHub Gist using curl
 
 tarxzfile=$(base64 -w 0 < "$backup_file")
-exit 0
+
 # Create a new Gist with the backup
 gist_response=$(curl -X POST -H "Authorization: token $github_token" \
     -d '{"public":true,"files":{"'$gist_filename'":{"content":"'$tarxzfile'"}}}' \
