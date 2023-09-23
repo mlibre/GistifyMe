@@ -6,35 +6,38 @@ usage() {
     exit 1
 }
 
+if [ $# -eq 0 ]; then
+    usage
+fi
+
 # Initialize variables with default values
 github_token=""
 backup_dir="."
 files_to_backup=()
 
 timestamp=$(date +'%Y-%m-%dT%H-%M-%S')
-gist_description="Backup created on $timestamp by gistifyMe"
 gist_filename="backup_$timestamp.tar.xz"
 
 # Process command-line arguments
 while getopts ":g:f:d:" opt; do
     case $opt in
-        g)
-            github_token="$OPTARG"
-            ;;
-        f)
-            files_to_backup+=("$OPTARG")
-            ;;
-        d)
-            backup_dir="$OPTARG"
-            ;;
-        \?)
-            echo "Invalid option: -$OPTARG" >&2
-            usage
-            ;;
-        :)
-            echo "Option -$OPTARG requires an argument." >&2
-            usage
-            ;;
+    g)
+        github_token="$OPTARG"
+        ;;
+    f)
+        files_to_backup+=("$OPTARG")
+        ;;
+    d)
+        backup_dir="$OPTARG"
+        ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        ;;
+    :)
+        echo "Option -$OPTARG requires an argument." >&2
+        usage
+        ;;
     esac
 done
 
@@ -60,11 +63,9 @@ fi
 mkdir -p "$backup_dir"
 
 # Create a tar archive and compress it with xz
-tar -cv "${files_to_backup[@]}" | xz -9 -c - > "$backup_file"
+tar -cv "${files_to_backup[@]}" | xz -9 -c - >"$backup_file"
 
-# Upload the backup to a GitHub Gist using curl
-
-tarxzfile=$(base64 -w 0 < "$backup_file")
+tarxzfile=$(base64 -w 0 <"$backup_file")
 
 # Create a new Gist with the backup
 gist_response=$(curl -X POST -H "Authorization: token $github_token" \
