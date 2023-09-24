@@ -1,5 +1,7 @@
 # GistifyMe
 
+![image](./image.jpg)
+
 **GistifyMe** is a versatile `Bash` script that enables you to back up and restore files and folders, **compress** them using `xz`, and upload the backup to a `GitHub Gist`. Whether you want to create backups or retrieve and extract previous ones, `GistifyMe` has you covered.
 
 ## Backup Usage
