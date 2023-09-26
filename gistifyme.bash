@@ -7,6 +7,11 @@ usage() {
 	exit 1
 }
 
+if ! command -v jq &>/dev/null; then
+	echo "jq is not installed. Please install it before running this script."
+	exit 1
+fi
+
 # Initialize variables
 github_token=""
 output_dir="."
