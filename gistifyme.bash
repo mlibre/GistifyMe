@@ -48,12 +48,16 @@ if [ -n "$gist_url" ]; then
 	# Ensure the output directory exists
 	mkdir -p "$output_dir"
 
-	# Extract the Gist ID from the URL
-	gist_id=$(echo "$gist_url" | awk -F'/' '{print $(NF)}')
-	username=$(echo "$gist_url" | awk -F'/' '{print $(NF-1)}')
+	if [[ $gist_url == *"githubusercontent"* ]]; then
+		raw_gist_url="$gist_url"
+	else
+		# Extract the Gist ID from the URL
+		gist_id=$(echo "$gist_url" | awk -F'/' '{print $(NF)}')
+		username=$(echo "$gist_url" | awk -F'/' '{print $(NF-1)}')
 
-	# Construct the raw Gist URL
-	raw_gist_url="https://gist.githubusercontent.com/$username/$gist_id/raw/"
+		# Construct the raw Gist URL
+		raw_gist_url="https://gist.githubusercontent.com/$username/$gist_id/raw/"
+	fi
 
 	# Use curl to fetch only the headers and capture the response code
 	http_status_code=$(curl -s -o /dev/null -w "%{http_code}" "$raw_gist_url")
